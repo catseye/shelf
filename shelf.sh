@@ -6,18 +6,18 @@
 ### utility functions ###
 
 
-function _shelf_verbose() {
+_shelf_verbose() {
     if [ -e /tmp/.shelf_verbose ]; then
         echo $*
     fi
 }
 
-function _shelf_show_run() {
+_shelf_show_run() {
     echo $*
     $*
 }
 
-function _shelf_ln() {
+_shelf_ln() {
     source="$1"
     dest="$2"
     if [ -e "$dest" ]; then
@@ -27,7 +27,7 @@ function _shelf_ln() {
     fi
 }
 
-function _shelf_link_stuff() {
+_shelf_link_stuff() {
     dir="$1"
     subdir="$2"
     find_opts="-name .git -prune -o -path Funicular/eg -prune -o -path Chrysoberyl/modules -prune -o -path Chrysoberyl/checkout -prune -o $3"
@@ -50,21 +50,21 @@ function _shelf_link_stuff() {
     done
 }
 
-function _shelf_link_bin() {
+_shelf_link_bin() {
     subdir="bin"
     find_opts="-executable -type f"
     skip_pat=".git|depcomp|configure|config.guess|*.h|*.so|*.so.*"
     _shelf_link_stuff "$1" "$subdir" "$find_opts" "$skip_pat"
 }
 
-function _shelf_link_include() {
+_shelf_link_include() {
     subdir="include"
     find_opts="-name '*.h'"
     skip_pat=".git"
     _shelf_link_stuff "$1" "$subdir" "$find_opts" "$skip_pat"
 }
 
-function _shelf_link_lib() {
+_shelf_link_lib() {
     subdir="lib"
     find_opts="-name '*.so' -o -name '*.so.*'"
     skip_pat=".git"
@@ -75,7 +75,7 @@ function _shelf_link_lib() {
 ### public functions ###
 
 
-function shelf_init() {
+shelf_init() {
     export SHELF_FARM="$1"
     export PATH="$SHELF_FARM/bin:$PATH"
     export LD_LIBRARY_PATH="$SHELF_FARM/lib:$LD_LIBRARY_PATH"
@@ -88,7 +88,7 @@ function shelf_init() {
     export LUA_CPATH="$SHELF_FARM/lib/?.so;$LUA_CPATH"
 }
 
-function shelf_link() {
+shelf_link() {
     if [ "X$1" = X ]; then
         echo "Usage: shelf_link {dir}"
         return 1
@@ -103,7 +103,7 @@ function shelf_link() {
     done
 }
 
-function shelf_unlink() {
+shelf_unlink() {
     if [ "X$1" = X ]; then
         echo "Usage: shelf_unlink {dir}"
         return 1
@@ -125,7 +125,7 @@ function shelf_unlink() {
     done
 }
 
-function shelf_unlink_broken() {
+shelf_unlink_broken() {
     for sub in bin include lib; do
         for file in $SHELF_FARM/$sub/*; do
             if [ ! -e "$file" ]; then
@@ -135,7 +135,7 @@ function shelf_unlink_broken() {
     done
 }
 
-function shelf_build() {
+shelf_build() {
     dir="$1"
     dir=`realpath "$dir"`
     if [ -x "$dir/build.sh" ]; then
