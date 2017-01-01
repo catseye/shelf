@@ -1,26 +1,34 @@
 shelf
 =====
 
-**shelf** is "a package installer which neither packages nor installs".
+*Work in progress.  Subject to change in backwards-incompatible ways.*
 
-Work in progress.  Subject to change in backwards-incompatible ways.
-
-shelf aims to replace [toolshelf](https://github.com/catseye/toolshelf).
-
-shelf is written in Bourne shell.
+Cat's Eye Technologies' **shelf** is "a package installer which
+neither packages nor installs".  It aims to be a replacement for
+[toolshelf](https://github.com/catseye/toolshelf), implemented as a
+set of Bourne shell functions.
 
 Quick Start
 -----------
 
 Put the file `shelf.sh` somewhere, say `$HOME/shelf.sh`.
 
-Add these two lines to the end of your shell startup script (`.bashrc`,
+Add these four lines to the end of your shell startup script (`.bashrc`,
 `.bash_profile`, or whatever):
 
     . $HOME/shelf.sh
-    shelf_init $HOME/.local
+    export SHELF_FARMBASE=$HOME/.local                   # see below
+    export SHELF_PATH=$HOME/checkout1:$HOME/checkout2    # see below
+    shelf_init
 
 Then start a new shell for it to take effect.
+
+`SHELF_FARMBASE` is the directory where the link farms will be created.
+On some OSes `$HOME/.local` has a similar purpose, so it can be used here
+too.
+
+`SHELF_PATH` should be a colon-separated list of directories where you
+will be keeping the source directories you wish to manage using shelf.
 
 Usage
 -----

@@ -44,7 +44,7 @@ _shelf_link_stuff() {
                 _shelf_verbose Skipping $base
             ;;
             *)
-                _shelf_ln "$source" "$SHELF_FARM/$subdir/$base"
+                _shelf_ln "$source" "$SHELF_FARMBASE/$subdir/$base"
             ;;
         esac
     done
@@ -76,16 +76,23 @@ _shelf_link_lib() {
 
 
 shelf_init() {
-    export SHELF_FARM="$1"
-    export PATH="$SHELF_FARM/bin:$PATH"
-    export LD_LIBRARY_PATH="$SHELF_FARM/lib:$LD_LIBRARY_PATH"
-    export LIBRARY_PATH="$SHELF_FARM/lib:$LIBRARY_PATH"
-    export C_INCLUDE_PATH="$SHELF_FARM/include:$C_INCLUDE_PATH"
-    export CPLUS_INCLUDE_PATH="$SHELF_FARM/include:$CPLUS_INCLUDE_PATH"
-    export PYTHONPATH="$SHELF_FARM/python:$PYTHONPATH"
-    export PKG_CONFIG_PATH="$SHELF_FARM/pkgconfig:$PKG_CONFIG_PATH"
-    export LUA_PATH="$SHELF_FARM/lua/?.lua;$LUA_PATH"
-    export LUA_CPATH="$SHELF_FARM/lib/?.so;$LUA_CPATH"
+    if [ "x$SHELF_FARMBASE" = "x" ]; then
+        echo "Please export SHELF_FARMBASE environment variable before calling this function."
+        return 1
+    fi
+    if [ "x$SHELF_PATH" = "x" ]; then
+        echo "Please export SHELF_PATH environment variable before calling this function."
+        return 1
+    fi
+    export PATH="$SHELF_FARMBASE/bin:$PATH"
+    export LD_LIBRARY_PATH="$SHELF_FARMBASE/lib:$LD_LIBRARY_PATH"
+    export LIBRARY_PATH="$SHELF_FARMBASE/lib:$LIBRARY_PATH"
+    export C_INCLUDE_PATH="$SHELF_FARMBASE/include:$C_INCLUDE_PATH"
+    export CPLUS_INCLUDE_PATH="$SHELF_FARMBASE/include:$CPLUS_INCLUDE_PATH"
+    export PYTHONPATH="$SHELF_FARMBASE/python:$PYTHONPATH"
+    export PKG_CONFIG_PATH="$SHELF_FARMBASE/pkgconfig:$PKG_CONFIG_PATH"
+    export LUA_PATH="$SHELF_FARMBASE/lua/?.lua;$LUA_PATH"
+    export LUA_CPATH="$SHELF_FARMBASE/lib/?.so;$LUA_CPATH"
 }
 
 shelf_link() {
@@ -111,7 +118,7 @@ shelf_unlink() {
     for dir in $*; do
         dir=`realpath "$dir"`
         for sub in bin include lib; do
-            for file in $SHELF_FARM/$sub/*; do
+            for file in $SHELF_FARMBASE/$sub/*; do
                 link=`readlink -f "$file"`
                 case $link in
                     ${dir}*)
@@ -127,7 +134,7 @@ shelf_unlink() {
 
 shelf_unlink_broken() {
     for sub in bin include lib; do
-        for file in $SHELF_FARM/$sub/*; do
+        for file in $SHELF_FARMBASE/$sub/*; do
             if [ ! -e "$file" ]; then
                 _shelf_show_run rm "$file"
             fi
