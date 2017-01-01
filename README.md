@@ -50,4 +50,14 @@ The following shell functions are defined by `shelf.sh` and available for use:
 *   `shelf_build` *DIR*
     
     Make a best-effort guess at how to build the sources in *DIR*, and try to
-    build them using that method.
+    build them using that method.  (Not well implemented yet)
+
+*   `shelf_pwd` *NAME*
+    
+    Print out the full path of the first directory on `SHELF_PATH` with name
+    *NAME*, if one exists, else print nothing and return an error code 1.
+
+*   `shelf_cd` *NAME*
+    
+    Change directory to the first directory on `SHELF_PATH` with name *NAME*,
+    if one exists, else display an error message and return an error code 1.

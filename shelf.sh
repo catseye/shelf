@@ -156,3 +156,25 @@ shelf_build() {
         return 1
     fi
 }
+
+shelf_pwd() {
+    name="$1"
+    path=`echo "$SHELF_PATH" | sed -e 's/:/ /g'`
+    for dir in $path; do
+        if [ -d "$dir/$name" ]; then
+            echo "$dir/$name"
+            return 0
+        fi
+    done
+    return 1
+}
+
+shelf_cd() {
+    name="$1"
+    dir=`shelf_pwd $name`
+    if [ "x$dir" = "x" ]; then
+        echo "No directory found for $name"
+        return 1
+    fi
+    cd $dir
+}
