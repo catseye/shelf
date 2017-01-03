@@ -178,3 +178,16 @@ shelf_cd() {
     fi
     cd $dir
 }
+
+shelf_which() {
+    w=`which $1`
+    if [ "x$w" = "x" ]; then
+        return 1
+    fi
+    if [ -L "$w" ]; then
+        r=`readlink $w`
+        echo "$w -> $r"
+    else
+        echo "$w"
+    fi
+}

@@ -61,3 +61,8 @@ The following shell functions are defined by `shelf.sh` and available for use:
     
     Change directory to the first directory on `SHELF_PATH` with name *NAME*,
     if one exists, else display an error message and return an error code 1.
+
+*   `shelf_which` *NAME*
+    
+    Essentially the same as `which` but, if the found file is a symbolic link,
+    display the filename that the link points to as well.
