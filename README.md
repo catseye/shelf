@@ -14,7 +14,8 @@ Quick Start
 Download the file `shelf.sh` and put it somewhere, say `$HOME/shelf.sh`.
 
 Or better, clone this repo as `$HOME/.shelf`; then the file `shelf.sh`
-will be at `$HOME/.shelf/shelf.sh`, and you can pull the latest changes.
+will be at `$HOME/.shelf/shelf.sh`, and you can pull the latest changes
+with `cd $HOME/.shelf && git pull origin master`.
 
 Then add these four lines to the end of your shell startup script
 (`.bashrc`, `.bash_profile`, or whatever):
@@ -55,7 +56,7 @@ The following shell functions are defined by `shelf.sh` and available for use:
 *   `shelf_build` *DIR*
     
     Make a best-effort guess at how to build the sources in *DIR*, and try to
-    build them using that method.  (Not well implemented yet)
+    build them using that method.
 
 *   `shelf_pwd` *NAME*
     

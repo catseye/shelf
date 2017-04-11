@@ -154,16 +154,35 @@ shelf_unlink_broken() {
 shelf_build() {
     dir="$1"
     dir=`realpath "$dir"`
-    if [ -x "$dir/build.sh" ]; then
-        CWD=`pwd`
-        cd $dir
+
+    CWD=`pwd`
+    cd $dir
+
+    # if build command is defined for this, then run it, else
+    if [ -x "build.sh" ]; then
         ./build.sh
-        cd $CWD
-        return $?
+    elif [ -x "make.sh" ]; then
+        ./make.sh
+    elif [ -e "build.xml" ]; then
+        ant
+    elif [ -e "configure" ]; then
+        ./configure --prefix=$dir/install && make && make install
+    elif [ -e "configure.in" ]; then
+        autoconf && ./configure --prefix=$dir/install && make && make install
+    elif [ -e "autogen.sh" ]; then
+        ./autogen.sh && autoconf && ./configure --prefix=$dir/install && make && make install
+    elif [ -e "Makefile" ]; then
+        make
+    elif [ -e "src/Makefile" ]; then
+        cd src
+        make
     else
         echo "No heuristic to build this source"
         return 1
     fi
+
+    cd $CWD
+    return $?
 }
 
 shelf_pwd() {
