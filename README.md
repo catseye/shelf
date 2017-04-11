@@ -38,13 +38,15 @@ Usage
 
 The following shell functions are defined by `shelf.sh` and available for use:
 
-*   `shelf_link` *DIR*
+*   `shelf_link` *DIR* [*DIR* ...]
     
     Create links to the relevant files in *DIR*, in the appropriate link farm.
+    One or more *DIR*s may be given.
 
-*   `shelf_unlink` *DIR*
+*   `shelf_unlink` *DIR* [*DIR* ...]
     
     Remove, from all link farms, any links to any files found in *DIR*.
+    One or more *DIR*s may be given.
 
 *   `shelf_unlink_broken`
     
@@ -64,3 +66,13 @@ The following shell functions are defined by `shelf.sh` and available for use:
     
     Change directory to the first directory on `SHELF_PATH` with name *NAME*,
     if one exists, else display an error message and return an error code 1.
+
+### Environment variables
+
+*   `SHELF_VERBOSE`
+    
+    TODO document this
+    
+*   `SHELF_LINK`
+    
+    TODO document this

@@ -7,14 +7,18 @@
 
 
 _shelf_verbose() {
-    if [ -e /tmp/.shelf_verbose ]; then
+    if [ "X$SHELF_VERBOSE" != X ]; then
         echo $*
     fi
 }
 
 _shelf_show_run() {
-    echo $*
-    $*
+    if [ "X$SHELF_DRYRUN" != X ]; then
+        echo "$* (DRY RUN)"
+    else
+        echo $*
+        $*
+    fi
 }
 
 _shelf_ln() {
@@ -40,6 +44,9 @@ _shelf_link_stuff() {
     for source in `find "$dir" $find_opts`; do
         base=`basename "$source"`
         case "$base" in
+            *.jpg|*.png)
+                _shelf_verbose Skipping $base
+            ;;
             ${skip_pat})
                 _shelf_verbose Skipping $base
             ;;
