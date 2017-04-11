@@ -135,7 +135,9 @@ shelf_unlink() {
 shelf_unlink_broken() {
     for sub in bin include lib; do
         for file in $SHELF_FARMBASE/$sub/*; do
-            if [ ! -e "$file" ]; then
+            if [ "$file" = "$SHELF_FARMBASE/$sub/*" ]; then
+                echo "Directory $SHELF_FARMBASE/$sub is empty, skipping"
+            elif [ ! -e "$file" ]; then
                 _shelf_show_run rm "$file"
             fi
         done
