@@ -7,14 +7,18 @@
 
 
 _shelf_verbose() {
-    if [ -e /tmp/.shelf_verbose ]; then
+    if [ "X$SHELF_VERBOSE" != X ]; then
         echo $*
     fi
 }
 
 _shelf_show_run() {
-    echo $*
-    $*
+    if [ "X$SHELF_DRYRUN" != X ]; then
+        echo "$* (DRY RUN)"
+    else
+        echo $*
+        $*
+    fi
 }
 
 _shelf_ln() {
@@ -40,6 +44,9 @@ _shelf_link_stuff() {
     for source in `find "$dir" $find_opts`; do
         base=`basename "$source"`
         case "$base" in
+            *.jpg|*.png)
+                _shelf_verbose Skipping $base
+            ;;
             ${skip_pat})
                 _shelf_verbose Skipping $base
             ;;
@@ -135,7 +142,9 @@ shelf_unlink() {
 shelf_unlink_broken() {
     for sub in bin include lib; do
         for file in $SHELF_FARMBASE/$sub/*; do
-            if [ ! -e "$file" ]; then
+            if [ "$file" = "$SHELF_FARMBASE/$sub/*" ]; then
+                echo "Directory $SHELF_FARMBASE/$sub is empty, skipping"
+            elif [ ! -e "$file" ]; then
                 _shelf_show_run rm "$file"
             fi
         done
@@ -145,16 +154,35 @@ shelf_unlink_broken() {
 shelf_build() {
     dir="$1"
     dir=`realpath "$dir"`
-    if [ -x "$dir/build.sh" ]; then
-        CWD=`pwd`
-        cd $dir
+
+    CWD=`pwd`
+    cd $dir
+
+    # if build command is defined for this, then run it, else
+    if [ -x "build.sh" ]; then
         ./build.sh
-        cd $CWD
-        return $?
+    elif [ -x "make.sh" ]; then
+        ./make.sh
+    elif [ -e "build.xml" ]; then
+        ant
+    elif [ -e "configure" ]; then
+        ./configure --prefix=$dir/install && make && make install
+    elif [ -e "configure.in" ]; then
+        autoconf && ./configure --prefix=$dir/install && make && make install
+    elif [ -e "autogen.sh" ]; then
+        ./autogen.sh && autoconf && ./configure --prefix=$dir/install && make && make install
+    elif [ -e "Makefile" ]; then
+        make
+    elif [ -e "src/Makefile" ]; then
+        cd src
+        make
     else
         echo "No heuristic to build this source"
         return 1
     fi
+
+    cd $CWD
+    return $?
 }
 
 shelf_pwd() {

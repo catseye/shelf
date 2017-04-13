@@ -11,12 +11,16 @@ set of Bourne shell functions.
 Quick Start
 -----------
 
-Put the file `shelf.sh` somewhere, say `$HOME/shelf.sh`.
+Download the file `shelf.sh` and put it somewhere, say `$HOME/shelf.sh`.
 
-Add these four lines to the end of your shell startup script (`.bashrc`,
-`.bash_profile`, or whatever):
+Or better, clone this repo as `$HOME/.shelf`; then the file `shelf.sh`
+will be at `$HOME/.shelf/shelf.sh`, and you can pull the latest changes
+with `cd $HOME/.shelf && git pull origin master`.
 
-    . $HOME/shelf.sh
+Then add these four lines to the end of your shell startup script
+(`.bashrc`, `.bash_profile`, or whatever):
+
+    . $HOME/.shelf/shelf.sh
     export SHELF_FARMBASE=$HOME/.local                   # see below
     export SHELF_PATH=$HOME/checkout1:$HOME/checkout2    # see below
     shelf_init
@@ -25,7 +29,7 @@ Then start a new shell for it to take effect.
 
 `SHELF_FARMBASE` is the directory where the link farms will be created.
 On some OSes `$HOME/.local` has a similar purpose, so it can be used here
-too.
+too.  (Although note, the wisdom of doing that has not been fully vetted.)
 
 `SHELF_PATH` should be a colon-separated list of directories where you
 will be keeping the source directories you wish to manage using shelf.
@@ -35,13 +39,15 @@ Usage
 
 The following shell functions are defined by `shelf.sh` and available for use:
 
-*   `shelf_link` *DIR*
+*   `shelf_link` *DIR* [*DIR* ...]
     
     Create links to the relevant files in *DIR*, in the appropriate link farm.
+    One or more *DIR*s may be given.
 
-*   `shelf_unlink` *DIR*
+*   `shelf_unlink` *DIR* [*DIR* ...]
     
     Remove, from all link farms, any links to any files found in *DIR*.
+    One or more *DIR*s may be given.
 
 *   `shelf_unlink_broken`
     
@@ -50,7 +56,7 @@ The following shell functions are defined by `shelf.sh` and available for use:
 *   `shelf_build` *DIR*
     
     Make a best-effort guess at how to build the sources in *DIR*, and try to
-    build them using that method.  (Not well implemented yet)
+    build them using that method.
 
 *   `shelf_pwd` *NAME*
     
@@ -66,3 +72,13 @@ The following shell functions are defined by `shelf.sh` and available for use:
     
     Essentially the same as `which` but, if the found file is a symbolic link,
     display the filename that the link points to as well.
+
+### Environment variables
+
+*   `SHELF_VERBOSE`
+    
+    TODO document this
+    
+*   `SHELF_LINK`
+    
+    TODO document this
