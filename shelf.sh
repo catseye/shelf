@@ -21,19 +21,23 @@ _shelf_show_run() {
     fi
 }
 
-_shelf_abspath() {
+_shelf_abspath_dir() {
     CWD=`pwd`
-    path=$1
-    if [ ! -d $path ]; then
-        path=`dirname $path`
-    fi
-    cd "$path"
+    cd "$1"
     pwd
     cd "$CWD"
 }
 
+_shelf_abspath_file() {
+    dir=`dirname $1`
+    dir=`_shelf_abspath_dir "$dir"`
+    base=`basename $1`
+    echo "$dir/$base"
+}
+
 _shelf_ln() {
-    source=`_shelf_abspath "$1"`
+    source=`_shelf_abspath_file "$1"`
+    _shelf_verbose "linking to $1 which absolutized as $source"
     dest="$2"
     if [ -e "$dest" ]; then
         _shelf_verbose $dest already exists
@@ -134,7 +138,7 @@ shelf_unlink() {
         return 1
     fi
     for dir in $*; do
-        dir=`_shelf_abspath "$dir"`
+        dir=`_shelf_abspath_dir "$dir"`
         for sub in bin include lib; do
             for file in $SHELF_FARMBASE/$sub/*; do
                 link=`readlink -f "$file"`
@@ -166,7 +170,7 @@ shelf_unlink_broken() {
 shelf_build() {
     CWD=`pwd`
 
-    dir=`_shelf_abspath "$1"`
+    dir=`_shelf_abspath_dir "$1"`
     cd $dir
 
     # if build command is defined for this, then run it, else
