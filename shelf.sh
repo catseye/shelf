@@ -23,11 +23,13 @@ _shelf_show_run() {
 
 _shelf_ln() {
     source="$1"
+    CWD=`pwd`
+    source="$CWD/$source"
     dest="$2"
     if [ -e "$dest" ]; then
         _shelf_verbose $dest already exists
     else
-        _shelf_show_run ln -s `realpath "$source"` "$dest"
+        _shelf_show_run ln -s "$source" "$dest"
     fi
 }
 
@@ -122,8 +124,9 @@ shelf_unlink() {
         echo "Usage: shelf_unlink {dir}"
         return 1
     fi
+    CWD=`pwd`
     for dir in $*; do
-        dir=`realpath "$dir"`
+        dir="$CWD/$dir"
         for sub in bin include lib; do
             for file in $SHELF_FARMBASE/$sub/*; do
                 link=`readlink -f "$file"`
@@ -153,9 +156,9 @@ shelf_unlink_broken() {
 
 shelf_build() {
     dir="$1"
-    dir=`realpath "$dir"`
-
     CWD=`pwd`
+    dir="$CWD/$dir"
+
     cd $dir
 
     # if build command is defined for this, then run it, else
