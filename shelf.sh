@@ -219,20 +219,3 @@ shelf_which() {
         echo "$w"
     fi
 }
-
-shelf_populate() {
-    src_dir="$1"
-    # experimental
-    while read -r line; do
-        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
-        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
-        tar zxvf $src_dir/$project.tar.gz
-        if [ "X$tag" != X ]; then
-            cd $project
-            git checkout $tag
-            cd ..
-        fi
-        #shelf_build $project
-        #shelf_link $project
-    done
-}
