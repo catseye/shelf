@@ -74,7 +74,7 @@ _shelf_link_stuff() {
 
 _shelf_link_bin() {
     subdir="bin"
-    find_opts="-executable -type f"
+    find_opts="-perm +111 -type f"
     skip_pat=".git|depcomp|configure|config.guess|*.h|*.so|*.so.*"
     _shelf_link_stuff "$1" "$subdir" "$find_opts" "$skip_pat"
 }
