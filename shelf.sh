@@ -193,6 +193,7 @@ shelf_build() {
         make
     else
         echo "No heuristic to build this source"
+        cd $CWD
         return 1
     fi
 
