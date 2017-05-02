@@ -168,7 +168,7 @@ shelf_unlink_broken() {
 }
 
 shelf_build() {
-    CWD=`pwd`
+    cwd=`pwd`
 
     dir=`_shelf_abspath_dir "$1"`
     cd $dir
@@ -189,16 +189,15 @@ shelf_build() {
     elif [ -e "Makefile" ]; then
         make
     elif [ -e "src/Makefile" ]; then
-        cd src
-        make
+        cd src && make
     else
         echo "No heuristic to build this source"
-        cd $CWD
-        return 1
     fi
 
-    cd $CWD
-    return $?
+    result=$?
+
+    cd $cwd
+    return $result
 }
 
 shelf_pwd() {
