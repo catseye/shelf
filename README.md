@@ -77,8 +77,13 @@ The following shell functions are defined by `shelf.sh` and available for use:
 
 *   `SHELF_VERBOSE`
     
-    TODO document this
+    If this environment variable is set to any non-empty value, the `shelf_*`
+    functions will produce verbose messages on standard output about what they
+    are doing, which can be useful for troubleshooting.
+
+*   `SHELF_DRYRUN`
     
-*   `SHELF_LINK`
-    
-    TODO document this
+    If this environment variable is set to any non-empty value, the `shelf_*`
+    functions will not make significant changes to the state of the
+    filesystem (for example, running commands like `ln` and `rm`) and instead
+    will only report that such changes would be made.
