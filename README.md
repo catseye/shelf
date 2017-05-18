@@ -73,6 +73,14 @@ The following shell functions are defined by `shelf.sh` and available for use:
     Essentially the same as `which` but, if the found file is a symbolic link,
     display the filename that the link points to as well.
 
+*   `shelf_populate_from_distfiles` *DIR* < *CATALOG*
+    
+    TBD
+
+*   `shelf_populate_from_git` *PREFIX* < *CATALOG*
+    
+    TBD
+
 ### Environment variables
 
 *   `SHELF_VERBOSE`
