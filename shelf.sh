@@ -287,9 +287,13 @@ shelf_cast_projection() {
     while read -r line; do
         project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
         tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
-        dest_dir="$projection_dir/$project"
 
-        rm -rf $dest_dir
-        (cd $project && git archive --format=tar --prefix=$project/ HEAD | (cd $projection_dir && tar xf -) )
+        dest_project=$project
+        if [ "X$SHELF_LOWERCASE" != X ]; then
+            dest_project=`echo $dest_project | tr '[:upper:]' '[:lower:]'`
+        fi
+
+        rm -rf "$projection_dir/$dest_project"
+        (cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
     done
 }
