@@ -280,3 +280,16 @@ shelf_populate_from_git() {
         #shelf_link $project
     done
 }
+
+shelf_cast_projection() {
+    projection_dir=`_shelf_abspath_dir "$1"`
+
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+        dest_dir="$projection_dir/$project"
+
+        rm -rf $dest_dir
+        (cd $project && git archive --format=tar --prefix=$project/ HEAD | (cd $projection_dir && tar xf -) )
+    done
+}

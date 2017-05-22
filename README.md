@@ -81,6 +81,10 @@ The following shell functions are defined by `shelf.sh` and available for use:
     
     TBD
 
+*   `shelf_cast_projection` *DIR* < *CATALOG*
+    
+    TBD
+
 ### Environment variables
 
 *   `SHELF_VERBOSE`
