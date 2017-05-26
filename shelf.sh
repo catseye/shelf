@@ -200,6 +200,25 @@ shelf_build() {
     return $result
 }
 
+shelf_test() {
+    cwd=`pwd`
+
+    dir=`_shelf_abspath_dir "$1"`
+    cd $dir
+
+    # if test command is defined for this, then run it, else
+    if [ -x "test.sh" ]; then
+        ./test.sh
+    else
+        echo "No test found for this source"
+    fi
+
+    result=$?
+
+    cd $cwd
+    return $result
+}
+
 shelf_pwd() {
     name="$1"
     path=`echo "$SHELF_PATH" | sed -e 's/:/ /g'`

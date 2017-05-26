@@ -58,6 +58,11 @@ The following shell functions are defined by `shelf.sh` and available for use:
     Make a best-effort guess at how to build the sources in *DIR*, and try to
     build them using that method.
 
+*   `shelf_test` *DIR*
+    
+    Make a best-effort guess at how to run tests for the project in *DIR*, then
+    run the tests using that method.
+
 *   `shelf_pwd` *NAME*
     
     Print out the full path of the first directory on `SHELF_PATH` with name
