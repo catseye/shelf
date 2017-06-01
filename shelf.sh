@@ -167,12 +167,8 @@ shelf_unlink_broken() {
     done
 }
 
-shelf_build() {
-    cwd=`pwd`
-
-    dir=`_shelf_abspath_dir "$1"`
-    cd $dir
-
+_shelf_build() {
+    pwd
     # if build command is defined for this, then run it, else
     if [ -x "build.sh" ]; then
         ./build.sh
@@ -193,30 +189,46 @@ shelf_build() {
     else
         echo "No heuristic to build this source"
     fi
-
-    result=$?
-
-    cd $cwd
-    return $result
 }
 
-shelf_test() {
-    cwd=`pwd`
+shelf_build() {
+    if [ "X$1" = X ]; then
+        echo "Usage: shelf_build {dir}"
+        return 1
+    fi
 
-    dir=`_shelf_abspath_dir "$1"`
-    cd $dir
+    for dir in $*; do
+        dir=`_shelf_abspath_dir "$dir"`
+        (cd $dir && _shelf_build)
+        if [ $? -ne 0 ]; then
+            return $?
+        fi
+    done
+}
 
+_shelf_test() {
+    pwd
     # if test command is defined for this, then run it, else
     if [ -x "test.sh" ]; then
         ./test.sh
     else
         echo "No test found for this source"
     fi
+}
 
-    result=$?
+shelf_test() {
+    if [ "X$1" = X ]; then
+        echo "Usage: shelf_test {dir}"
+        return 1
+    fi
 
-    cd $cwd
-    return $result
+    for dir in $*; do
+        dir=`_shelf_abspath_dir "$dir"`
+        (cd $dir && _shelf_test)
+        if [ $? -ne 0 ]; then
+            return $?
+        fi
+    done
 }
 
 shelf_pwd() {

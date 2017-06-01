@@ -53,15 +53,15 @@ The following shell functions are defined by `shelf.sh` and available for use:
     
     Remove, from all link farms, any links that are broken.
 
-*   `shelf_build` *DIR*
+*   `shelf_build` *DIR* [*DIR* ...]
     
     Make a best-effort guess at how to build the sources in *DIR*, and try to
-    build them using that method.
+    build them using that method.  One or more *DIR*s may be given.
 
-*   `shelf_test` *DIR*
+*   `shelf_test` *DIR* [*DIR* ...]
     
     Make a best-effort guess at how to run tests for the project in *DIR*, then
-    run the tests using that method.
+    run the tests using that method.  One or more *DIR*s may be given.
 
 *   `shelf_pwd` *NAME*
     
@@ -97,6 +97,15 @@ The following shell functions are defined by `shelf.sh` and available for use:
 *   `shelf_unpin` < *CATALOG*
     
     TBD
+
+### Catalog files
+
+In the context of shelf, a _catalog file_ is a text file with one entry per line.
+Each entry consists of a directory name, optionally followed by an `@` symbol
+followed by a tag name.
+
+Several commands operate on catalog files, which are usually supplied via
+standard input.  Some of these commands ignore the tag names.
 
 ### Environment variables
 
