@@ -90,6 +90,14 @@ The following shell functions are defined by `shelf.sh` and available for use:
     
     TBD
 
+*   `shelf_pin` < *CATALOG*
+    
+    TBD
+
+*   `shelf_unpin` < *CATALOG*
+    
+    TBD
+
 ### Environment variables
 
 *   `SHELF_VERBOSE`

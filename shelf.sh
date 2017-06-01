@@ -316,3 +316,29 @@ shelf_cast_projection() {
         (cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
     done
 }
+
+shelf_pin() {
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+
+        dest="$project"
+        if [ -d $dest ]; then
+            if [ "X$tag" != X ]; then
+                (cd $dest && git checkout $tag)
+            fi
+        fi
+    done
+}
+
+shelf_unpin() {
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+
+        dest="$project"
+        if [ -d $dest ]; then
+            (cd $dest && git checkout master)
+        fi
+    done
+}
