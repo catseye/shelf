@@ -168,6 +168,8 @@ shelf_unlink_broken() {
 }
 
 _shelf_build() {
+    # argument must be absolute path of current directory
+    dir=$1
     pwd
     # if build command is defined for this, then run it, else
     if [ -x "build.sh" ]; then
@@ -197,13 +199,23 @@ shelf_build() {
         return 1
     fi
 
+    failures=""
+
     for dir in $*; do
+        project=$dir
         dir=`_shelf_abspath_dir "$dir"`
-        (cd $dir && _shelf_build)
+        (cd $dir && _shelf_build $dir)
         if [ $? -ne 0 ]; then
-            return $?
+            failures="$failures $project"
         fi
     done
+
+    if [ "X$failures" = X ]; then
+        return 0
+    else
+        echo "Failures: $failures"
+        return 1
+    fi
 }
 
 _shelf_test() {
@@ -222,13 +234,23 @@ shelf_test() {
         return 1
     fi
 
+    failures=""
+
     for dir in $*; do
+        project=$dir
         dir=`_shelf_abspath_dir "$dir"`
         (cd $dir && _shelf_test)
         if [ $? -ne 0 ]; then
-            return $?
+            failures="$failures $project"
         fi
     done
+
+    if [ "X$failures" = X ]; then
+        return 0
+    else
+        echo "Failures: $failures"
+        return 1
+    fi
 }
 
 shelf_pwd() {
