@@ -376,3 +376,11 @@ shelf_unpin() {
         fi
     done
 }
+
+shelf_dockgh() {
+    url="https://github.com/$1.git"
+    git clone $url
+    project=`basename $1`
+    shelf_build $project || return 1
+    shelf_link $project || return 1
+}
