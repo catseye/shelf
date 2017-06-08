@@ -80,23 +80,31 @@ The following shell functions are defined by `shelf.sh` and available for use:
 
 *   `shelf_populate_from_distfiles` *DIR* < *CATALOG*
     
-    TBD
+    TBW
 
 *   `shelf_populate_from_git` *PREFIX* < *CATALOG*
     
-    TBD
+    TBW
 
 *   `shelf_cast_projection` *DIR* < *CATALOG*
     
-    TBD
+    TBW
 
 *   `shelf_pin` < *CATALOG*
     
-    TBD
+    TBW
 
 *   `shelf_unpin` < *CATALOG*
     
-    TBD
+    TBW
+
+*   `shelf_dockgh` *USER/PROJECT*
+    
+    TBW
+
+*   `shelf_push` *DEST* *DIR* [*DIR* ...]
+    
+    *DEST* should be a directory on the `SHELF_PATH`.
 
 ### Catalog files
 
