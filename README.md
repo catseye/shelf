@@ -1,7 +1,7 @@
 shelf
 =====
 
-*Version 0.1.  Subject to change in backwards-incompatible ways.*
+*Version 0.2-PRE.  Subject to change in backwards-incompatible ways.*
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
@@ -105,6 +105,11 @@ The following shell functions are defined by `shelf.sh` and available for use:
 *   `shelf_push` *DEST* *DIR* [*DIR* ...]
     
     *DEST* should be a directory on the `SHELF_PATH`.
+
+*   `shelf_fanout` *DIR*
+    
+    Executes a `shelf_push` to every directory on the `SHELF_PATH` that has the
+    same basename as *DIR*.
 
 ### Catalog files
 

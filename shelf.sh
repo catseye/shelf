@@ -253,6 +253,20 @@ shelf_test() {
     fi
 }
 
+_shelf_push() {
+    src=$1
+    dest=$2
+    if [ "$src" = "$dest" ]; then
+        echo "'$dest' is same as source directory"
+        return 0
+    fi
+    if [ ! -d "$dest/.git" ]; then
+        echo "'$dest' is not a git repository"
+        return 1
+    fi
+    (cd $dest && git pull $src)
+}
+
 shelf_push() {
     if [ "X$1" = X ]; then
         echo "Usage: shelf_push dest_shelf {dir}"
@@ -270,19 +284,13 @@ shelf_push() {
     failures=""
 
     for dir in $*; do
-        project=$dir
         dir=`_shelf_abspath_dir "$dir"`
         base=`basename "$dir"`
-        dest="$dest_shelf/$base"
 
-        if [ ! -d "$dest/.git" ]; then
-            echo "'$dest' is not a git repository"
-            continue
-        fi
+        _shelf_push $dir "$dest_shelf/$base"
 
-        (cd $dest && git pull $dir)
         if [ $? -ne 0 ]; then
-            failures="$failures $project"
+            failures="$failures $base"
         fi
     done
 
@@ -292,6 +300,24 @@ shelf_push() {
         echo "Failures: $failures"
         return 1
     fi
+}
+
+shelf_fanout() {
+    path=`echo "$SHELF_PATH" | sed -e 's/:/ /g'`
+
+    project=$1
+    dir=`_shelf_abspath_dir "$dir"`
+    base=`basename "$dir"`
+
+    for shelf in $path; do
+        if [ "$dir" = "$shelf/$base" ]; then
+            continue
+        fi
+        if [ -d "$shelf/$base" ]; then
+            echo "--> $shelf/$base"
+            _shelf_push $dir "$shelf/$base"
+        fi
+    done
 }
 
 shelf_pwd() {
