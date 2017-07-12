@@ -78,6 +78,34 @@ The following shell functions are defined by `shelf.sh` and available for use:
     Essentially the same as `which` but, if the found file is a symbolic link,
     display the filename that the link points to as well.
 
+*   `shelf_dockgh` *USER/PROJECT*
+    
+    Convenience command which, given the user (or organization) and repository
+    name of a repository on Github, clones that repository using `git`, then
+    runs `shelf_build` and `shelf_link` on the clone's directory.  This makes
+    the most sense if the current directory is on the `SHELF_PATH`, but no
+    check is made.
+
+*   `shelf_push` *DEST* *DIR* [*DIR* ...]
+    
+    Pushes changes from the project in *DIR* to the project of the same basename
+    in *DEST*.  Currently only supports git repos.  *DEST* should be a
+    directory on the `SHELF_PATH`.
+
+*   `shelf_fanout` *DIR*
+    
+    Executes a `shelf_push` to every directory on the `SHELF_PATH` that contains
+    a project directory that has the same basename as *DIR*.
+
+### Catalog files
+
+In the context of shelf, a _catalog file_ is a text file with one entry per line.
+Each entry consists of a directory name, optionally followed by an `@` symbol
+followed by a tag name.
+
+Several commands operate on catalog files, which are usually supplied via
+standard input.  Some of these commands ignore the tag names.
+
 *   `shelf_populate_from_distfiles` *DIR* < *CATALOG*
     
     TBW
@@ -97,28 +125,6 @@ The following shell functions are defined by `shelf.sh` and available for use:
 *   `shelf_unpin` < *CATALOG*
     
     TBW
-
-*   `shelf_dockgh` *USER/PROJECT*
-    
-    TBW
-
-*   `shelf_push` *DEST* *DIR* [*DIR* ...]
-    
-    *DEST* should be a directory on the `SHELF_PATH`.
-
-*   `shelf_fanout` *DIR*
-    
-    Executes a `shelf_push` to every directory on the `SHELF_PATH` that has the
-    same basename as *DIR*.
-
-### Catalog files
-
-In the context of shelf, a _catalog file_ is a text file with one entry per line.
-Each entry consists of a directory name, optionally followed by an `@` symbol
-followed by a tag name.
-
-Several commands operate on catalog files, which are usually supplied via
-standard input.  Some of these commands ignore the tag names.
 
 ### Environment variables
 
