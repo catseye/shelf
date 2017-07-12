@@ -401,7 +401,7 @@ shelf_populate_from_git() {
     done
 }
 
-shelf_cast_projection() {
+shelf_cast() {
     projection_dir=`_shelf_abspath_dir "$1"`
 
     while read -r line; do

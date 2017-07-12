@@ -108,15 +108,21 @@ standard input.  Some of these commands ignore the tag names.
 
 *   `shelf_populate_from_distfiles` *DIR* < *CATALOG*
     
-    TBW
+    Given a directory *DIR* containing tarballs of the project listed in
+    *CATALOG*, extract each of those tarballs to a directory of the same
+    name in the current directory (assumed to be on `SHELF_PATH`.)
 
 *   `shelf_populate_from_git` *PREFIX* < *CATALOG*
     
-    TBW
+    For each of the projects listed in *CATALOG*, prefix *PREFIX* to its
+    name and attempt to clone that named object with `git` to a repository
+    directory in the current directory (assumed to be on `SHELF_PATH`.)
 
-*   `shelf_cast_projection` *DIR* < *CATALOG*
+*   `shelf_cast` *DIR* < *CATALOG*
     
-    TBW
+    When executed from a directory containing repositories listed in *CATALOG*,
+    create a non-version-controlled directory in *DIR* from each of the listed
+    repositories.
 
 *   `shelf_pin` < *CATALOG*
     
