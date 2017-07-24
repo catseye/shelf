@@ -89,8 +89,10 @@ The following shell functions are defined by `shelf.sh` and available for use:
 *   `shelf_push` *DEST* *DIR* [*DIR* ...]
     
     Pushes changes from the project in *DIR* to the project of the same basename
-    in *DEST*.  Currently only supports git repos.  *DEST* should be a
-    directory on the `SHELF_PATH`.
+    in *DEST*.  Currently only supports git repos.  Always pushes the changes to
+    a branch in *DEST* whose name is the name of the current branch in *DIR; if
+    there is no such branch configured in *DEST*, an error occurs.  *DEST* should
+    be a directory on the `SHELF_PATH`.
 
 *   `shelf_fanout` *DIR*
     
@@ -126,11 +128,15 @@ standard input.  Some of these commands ignore the tag names.
 
 *   `shelf_pin` < *CATALOG*
     
-    TBW
+    When executed from a directory containing repositories listed in *CATALOG*,
+    checks out each repository named in the catalog at the tag or branch given
+    by its tag name.
 
 *   `shelf_unpin` < *CATALOG*
     
-    TBW
+    When executed from a directory containing repositories listed in *CATALOG*,
+    checks out each repository named in the catalog at the tip of its `master`
+    branch.
 
 ### Environment variables
 
