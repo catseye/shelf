@@ -264,7 +264,12 @@ _shelf_push() {
         echo "'$dest' is not a git repository"
         return 1
     fi
-    (cd $dest && git pull $src)
+    branch=`(cd $src && git symbolic-ref --short HEAD)`
+    if [ "X$branch" = X ]; then
+        echo "Couldn't determine branch"
+        return 1
+    fi
+    (cd $dest && git checkout $branch && git pull $src $branch)
 }
 
 shelf_push() {
