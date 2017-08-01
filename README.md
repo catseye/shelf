@@ -1,7 +1,7 @@
 shelf
 =====
 
-*Version 0.2-PRE.  Subject to change in backwards-incompatible ways.*
+*Version 0.2.  Subject to change in backwards-incompatible ways.*
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
