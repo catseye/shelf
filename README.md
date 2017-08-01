@@ -1,7 +1,7 @@
 shelf
 =====
 
-*Version 0.1.  Subject to change in backwards-incompatible ways.*
+*Version 0.2.  Subject to change in backwards-incompatible ways.*
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
@@ -53,10 +53,15 @@ The following shell functions are defined by `shelf.sh` and available for use:
     
     Remove, from all link farms, any links that are broken.
 
-*   `shelf_build` *DIR*
+*   `shelf_build` *DIR* [*DIR* ...]
     
     Make a best-effort guess at how to build the sources in *DIR*, and try to
-    build them using that method.
+    build them using that method.  One or more *DIR*s may be given.
+
+*   `shelf_test` *DIR* [*DIR* ...]
+    
+    Make a best-effort guess at how to run tests for the project in *DIR*, then
+    run the tests using that method.  One or more *DIR*s may be given.
 
 *   `shelf_pwd` *NAME*
     
@@ -72,6 +77,66 @@ The following shell functions are defined by `shelf.sh` and available for use:
     
     Essentially the same as `which` but, if the found file is a symbolic link,
     display the filename that the link points to as well.
+
+*   `shelf_dockgh` *USER/PROJECT*
+    
+    Convenience command which, given the user (or organization) and repository
+    name of a repository on Github, clones that repository using `git`, then
+    runs `shelf_build` and `shelf_link` on the clone's directory.  This makes
+    the most sense if the current directory is on the `SHELF_PATH`, but no
+    check is made.
+
+*   `shelf_push` *DEST* *DIR* [*DIR* ...]
+    
+    Pushes changes from the project in *DIR* to the project of the same basename
+    in *DEST*.  Currently only supports git repos.  Always pushes the changes to
+    a branch in *DEST* whose name is the name of the current branch in *DIR; if
+    there is no such branch configured in *DEST*, an error occurs.  *DEST* should
+    be a directory on the `SHELF_PATH`.
+
+*   `shelf_fanout` *DIR*
+    
+    Executes a `shelf_push` to every directory on the `SHELF_PATH` that contains
+    a project directory that has the same basename as *DIR*.
+
+### Catalog files
+
+In the context of shelf, a _catalog file_ is a text file with one entry per line.
+Each entry consists of a directory name, optionally followed by an `@` symbol
+followed by a tag name.
+
+Several commands operate on catalog files, which are usually supplied via
+standard input.  Some of these commands ignore the tag names.
+
+*   `shelf_populate_from_distfiles` *DIR* < *CATALOG*
+    
+    Given a directory *DIR* containing tarballs of the project listed in
+    *CATALOG*, extract each of those tarballs to a directory of the same
+    name in the current directory (assumed to be on `SHELF_PATH`.)
+
+*   `shelf_populate_from_git` *PREFIX* < *CATALOG*
+    
+    For each of the projects listed in *CATALOG*, prefix *PREFIX* to its
+    name and attempt to clone that named object with `git` to a repository
+    directory in the current directory (assumed to be on `SHELF_PATH`.)
+
+*   `shelf_cast` *DIR* < *CATALOG*
+    
+    When executed from a directory containing repositories listed in *CATALOG*,
+    create a non-version-controlled directory in *DIR* from each of the listed
+    repositories.
+
+*   `shelf_pin` < *CATALOG*
+    
+    When executed from a directory containing repositories listed in *CATALOG*,
+    checks out each repository named in the catalog at the tag or branch given
+    by its tag name.
+
+*   `shelf_unpin` < *CATALOG*
+    
+    When executed from a directory containing repositories listed in *CATALOG*,
+    checks out each repository named in the catalog at the tip of its `master`
+    branch.
 
 ### Environment variables
 

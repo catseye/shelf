@@ -167,12 +167,10 @@ shelf_unlink_broken() {
     done
 }
 
-shelf_build() {
-    cwd=`pwd`
-
-    dir=`_shelf_abspath_dir "$1"`
-    cd $dir
-
+_shelf_build() {
+    # argument must be absolute path of current directory
+    dir=$1
+    pwd
     # if build command is defined for this, then run it, else
     if [ -x "build.sh" ]; then
         ./build.sh
@@ -193,11 +191,138 @@ shelf_build() {
     else
         echo "No heuristic to build this source"
     fi
+}
 
-    result=$?
+shelf_build() {
+    if [ "X$1" = X ]; then
+        echo "Usage: shelf_build {dir}"
+        return 1
+    fi
 
-    cd $cwd
-    return $result
+    failures=""
+
+    for dir in $*; do
+        project=$dir
+        dir=`_shelf_abspath_dir "$dir"`
+        (cd $dir && _shelf_build $dir)
+        if [ $? -ne 0 ]; then
+            failures="$failures $project"
+        fi
+    done
+
+    if [ "X$failures" = X ]; then
+        return 0
+    else
+        echo "Failures: $failures"
+        return 1
+    fi
+}
+
+_shelf_test() {
+    pwd
+    # if test command is defined for this, then run it, else
+    if [ -x "test.sh" ]; then
+        ./test.sh
+    else
+        echo "No test found for this source"
+    fi
+}
+
+shelf_test() {
+    if [ "X$1" = X ]; then
+        echo "Usage: shelf_test {dir}"
+        return 1
+    fi
+
+    failures=""
+
+    for dir in $*; do
+        project=$dir
+        dir=`_shelf_abspath_dir "$dir"`
+        (cd $dir && _shelf_test)
+        if [ $? -ne 0 ]; then
+            failures="$failures $project"
+        fi
+    done
+
+    if [ "X$failures" = X ]; then
+        return 0
+    else
+        echo "Failures: $failures"
+        return 1
+    fi
+}
+
+_shelf_push() {
+    src=$1
+    dest=$2
+    if [ "$src" = "$dest" ]; then
+        echo "'$dest' is same as source directory"
+        return 0
+    fi
+    if [ ! -d "$dest/.git" ]; then
+        echo "'$dest' is not a git repository"
+        return 1
+    fi
+    branch=`(cd $src && git symbolic-ref --short HEAD)`
+    if [ "X$branch" = X ]; then
+        echo "Couldn't determine branch"
+        return 1
+    fi
+    (cd $dest && git checkout $branch && git pull $src $branch)
+}
+
+shelf_push() {
+    if [ "X$1" = X ]; then
+        echo "Usage: shelf_push dest_shelf {dir}"
+        return 1
+    fi
+    
+    dest_shelf=$1
+    shift
+
+    if [ "X$1" = X ]; then
+        echo "Usage: shelf_push dest_shelf {dir}"
+        return 1
+    fi
+
+    failures=""
+
+    for dir in $*; do
+        dir=`_shelf_abspath_dir "$dir"`
+        base=`basename "$dir"`
+
+        _shelf_push $dir "$dest_shelf/$base"
+
+        if [ $? -ne 0 ]; then
+            failures="$failures $base"
+        fi
+    done
+
+    if [ "X$failures" = X ]; then
+        return 0
+    else
+        echo "Failures: $failures"
+        return 1
+    fi
+}
+
+shelf_fanout() {
+    path=`echo "$SHELF_PATH" | sed -e 's/:/ /g'`
+
+    project=$1
+    dir=`_shelf_abspath_dir "$dir"`
+    base=`basename "$dir"`
+
+    for shelf in $path; do
+        if [ "$dir" = "$shelf/$base" ]; then
+            continue
+        fi
+        if [ -d "$shelf/$base" ]; then
+            echo "--> $shelf/$base"
+            _shelf_push $dir "$shelf/$base"
+        fi
+    done
 }
 
 shelf_pwd() {
@@ -233,4 +358,101 @@ shelf_which() {
     else
         echo "$w"
     fi
+}
+
+shelf_populate_from_distfiles() {
+    # ... taken from The-Platform ...
+
+    src_dir="$1"
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+        if [ -e "$src_dir/$project.tar.gz" ]; then
+            tar zxvf $src_dir/$project.tar.gz
+        elif [ -e "$src_dir/$project.tgz" ]; then
+            tar zxvf $src_dir/$project.tgz
+        fi
+        #shelf_build $project
+        #shelf_link $project
+    done
+}
+
+shelf_populate_from_git() {
+    git_prefix="$1"
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+
+        # ... taken from Funicular ...
+
+        url="$git_prefix$project"
+        dest=`basename $url`
+
+        if [ ! -d $dest ]; then
+            git clone $url $dest
+        fi
+
+        branch=`cd $dest && git rev-parse --abbrev-ref HEAD`
+        if [ "X$branch" != "XHEAD" ]; then
+            (cd $dest && git pull)
+        fi
+
+        if [ "X$tag" != X ]; then
+            (cd $dest && git checkout $tag)
+        fi
+
+        #shelf_build $project
+        #shelf_link $project
+    done
+}
+
+shelf_cast() {
+    projection_dir=`_shelf_abspath_dir "$1"`
+
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+
+        dest_project=$project
+        if [ "X$SHELF_LOWERCASE" != X ]; then
+            dest_project=`echo $dest_project | tr '[:upper:]' '[:lower:]'`
+        fi
+
+        rm -rf "$projection_dir/$dest_project"
+        (cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
+    done
+}
+
+shelf_pin() {
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+
+        dest="$project"
+        if [ -d $dest ]; then
+            if [ "X$tag" != X ]; then
+                (cd $dest && git checkout $tag)
+            fi
+        fi
+    done
+}
+
+shelf_unpin() {
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+
+        dest="$project"
+        if [ -d $dest ]; then
+            (cd $dest && git checkout master)
+        fi
+    done
+}
+
+shelf_dockgh() {
+    url="https://github.com/$1.git"
+    git clone $url
+    project=`basename $1`
+    shelf_build $project || return 1
+    shelf_link $project || return 1
 }
