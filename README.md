@@ -1,7 +1,7 @@
 shelf
 =====
 
-*Version 0.2.  Subject to change in backwards-incompatible ways.*
+*Version 0.3-PRE.  Subject to change in backwards-incompatible ways.*
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
@@ -33,6 +33,13 @@ too.  (Although note, the wisdom of doing that has not been fully vetted.)
 
 `SHELF_PATH` should be a colon-separated list of directories where you
 will be keeping the source directories you wish to manage using shelf.
+
+If you are using `bash`, you can also configure some nicer tab-completion
+by sourcing `shelf_tabcomplete.sh`, i.e. you can also add
+
+    . $HOME/.shelf/shelf_tabcomplete.sh
+
+to your startup script.
 
 Usage
 -----
