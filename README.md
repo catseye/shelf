@@ -94,7 +94,7 @@ The following shell functions are defined by `shelf.sh` and available for use:
     there is no such branch configured in *DEST*, an error occurs.  *DEST* should
     be a directory on the `SHELF_PATH`.
 
-*   `shelf_fanout` *DIR*
+*   `shelf_fanout` *DIR* [*DIR* ...]
     
     Executes a `shelf_push` to every directory on the `SHELF_PATH` that contains
     a project directory that has the same basename as *DIR*.

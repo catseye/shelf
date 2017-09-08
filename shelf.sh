@@ -310,18 +310,19 @@ shelf_push() {
 shelf_fanout() {
     path=`echo "$SHELF_PATH" | sed -e 's/:/ /g'`
 
-    project=$1
-    dir=`_shelf_abspath_dir "$dir"`
-    base=`basename "$dir"`
+    for dir in $*; do
+        dir=`_shelf_abspath_dir "$dir"`
+        base=`basename "$dir"`
 
-    for shelf in $path; do
-        if [ "$dir" = "$shelf/$base" ]; then
-            continue
-        fi
-        if [ -d "$shelf/$base" ]; then
-            echo "--> $shelf/$base"
-            _shelf_push $dir "$shelf/$base"
-        fi
+        for shelf in $path; do
+            if [ "$dir" = "$shelf/$base" ]; then
+                continue
+            fi
+            if [ -d "$shelf/$base" ]; then
+                echo "--> $shelf/$base"
+                _shelf_push $dir "$shelf/$base"
+            fi
+        done
     done
 }
 
