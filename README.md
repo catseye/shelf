@@ -159,3 +159,10 @@ standard input.  Some of these commands ignore the tag names.
     functions will not make significant changes to the state of the
     filesystem (for example, running commands like `ln` and `rm`) and instead
     will only report that such changes would be made.
+
+### TODO
+
+*   Make `shelf_fanout` fetch the branch, if the destination repo doesn't have it.
+*   Make a `shelf_fanin` to complement `shelf_fanout`.
+*   Make a `shelf_populate_from_shelf` (`shelf_replicate`?)
+*   Would a `shelf_pwd_all` be helpful?  It's in my notes, but I don't know why.
