@@ -98,8 +98,8 @@ The following shell functions are defined by `shelf.sh` and available for use:
     Pushes changes from the project in *DIR* to the project of the same basename
     in *DEST*.  Currently only supports git repos.  Always pushes the changes to
     a branch in *DEST* whose name is the name of the current branch in *DIR; if
-    there is no such branch configured in *DEST*, an error occurs.  *DEST* should
-    be a directory on the `SHELF_PATH`.
+    there is no such branch configured in *DEST*, it will be fetched first.
+    *DEST* should be a directory on the `SHELF_PATH`.
 
 *   `shelf_fanout` *DIR* [*DIR* ...]
     
@@ -162,7 +162,7 @@ standard input.  Some of these commands ignore the tag names.
 
 ### TODO
 
-*   Make `shelf_fanout` fetch the branch, if the destination repo doesn't have it.
+*   Make a `shelf_pull` to complement `shelf_push`.
 *   Make a `shelf_fanin` to complement `shelf_fanout`.
 *   Make a `shelf_populate_from_shelf` (`shelf_replicate`?)
 *   Would a `shelf_pwd_all` be helpful?  It's in my notes, but I don't know why.
