@@ -1,7 +1,7 @@
 shelf
 =====
 
-*Version 0.2.  Subject to change in backwards-incompatible ways.*
+*Version 0.3.  Subject to change in backwards-incompatible ways.*
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
@@ -33,6 +33,13 @@ too.  (Although note, the wisdom of doing that has not been fully vetted.)
 
 `SHELF_PATH` should be a colon-separated list of directories where you
 will be keeping the source directories you wish to manage using shelf.
+
+If you are using `bash`, you can also configure some nicer tab-completion
+by sourcing `shelf_tabcomplete.sh`, i.e. you can also add
+
+    . $HOME/.shelf/shelf_tabcomplete.sh
+
+to your startup script.
 
 Usage
 -----
@@ -91,10 +98,10 @@ The following shell functions are defined by `shelf.sh` and available for use:
     Pushes changes from the project in *DIR* to the project of the same basename
     in *DEST*.  Currently only supports git repos.  Always pushes the changes to
     a branch in *DEST* whose name is the name of the current branch in *DIR; if
-    there is no such branch configured in *DEST*, an error occurs.  *DEST* should
-    be a directory on the `SHELF_PATH`.
+    there is no such branch configured in *DEST*, it will be fetched first.
+    *DEST* should be a directory on the `SHELF_PATH`.
 
-*   `shelf_fanout` *DIR*
+*   `shelf_fanout` *DIR* [*DIR* ...]
     
     Executes a `shelf_push` to every directory on the `SHELF_PATH` that contains
     a project directory that has the same basename as *DIR*.
@@ -152,3 +159,31 @@ standard input.  Some of these commands ignore the tag names.
     functions will not make significant changes to the state of the
     filesystem (for example, running commands like `ln` and `rm`) and instead
     will only report that such changes would be made.
+
+### TODO
+
+*   Make a `shelf_pull` to complement `shelf_push`.
+*   Make a `shelf_fanin` to complement `shelf_fanout`.
+*   Make a `shelf_populate_from_shelf` (`shelf_replicate`?)
+*   Would a `shelf_pwd_all` be helpful?  It's in my notes, but I don't know why.
+
+### History
+
+#### 0.3
+
+*   Added tab completion for bash.
+*   Made `shelf_push` and `shelf_fanout` fetch the branch first, so new branches
+    can be pushed to repositories that don't have them yet.
+*   `shelf_fanout` is able to process multiple project directories.
+
+#### 0.2
+
+*   Added `shelf_test`, `shelf_dockgh`, `shelf_push`, `shelf_fanout`,
+    `shelf_populate_from_distfiles`, `shelf_populate_from_git`, `shelf_cast`,
+    `shelf_pin`, and `shelf_unpin`.
+*   `shelf_build` is able to process multiple sources.
+*   Fixed bug where `shelf_build` exited immediately on the first error.
+
+#### 0.1
+
+*   Initial version.
