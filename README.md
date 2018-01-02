@@ -166,3 +166,19 @@ standard input.  Some of these commands ignore the tag names.
 *   Make a `shelf_fanin` to complement `shelf_fanout`.
 *   Make a `shelf_populate_from_shelf` (`shelf_replicate`?)
 *   Would a `shelf_pwd_all` be helpful?  It's in my notes, but I don't know why.
+
+### History
+
+#### 0.3
+
+*   Added tab completion for bash.
+*   Made `shelf_push` and `shelf_fanout` fetch the branch first, so new branches
+    can be pushed to repositories that don't have them yet.
+
+#### 0.2
+
+(to be written based on reading the repo history)
+
+#### 0.1
+
+(to be written based on reading the repo history)
