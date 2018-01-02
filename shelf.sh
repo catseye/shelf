@@ -253,6 +253,19 @@ shelf_test() {
     fi
 }
 
+_shelf_pull_from_dest() {
+    # utility function only used internally by _shelf_push()
+    src=$1
+    branch=$2
+    origin=`git remote get-url origin`
+    if [ "X$origin" != "X$src" ]; then
+        echo "Resetting origin to $src"
+        git remote remove origin
+        git remote add origin $src
+    fi
+    git fetch && git checkout $branch && git pull origin $branch
+}
+
 _shelf_push() {
     src=$1
     dest=$2
@@ -269,7 +282,7 @@ _shelf_push() {
         echo "Couldn't determine branch"
         return 1
     fi
-    (cd $dest && git checkout $branch && git pull $src $branch)
+    (cd $dest && _shelf_pull_from_dest $src $branch)
 }
 
 shelf_push() {
