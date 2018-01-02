@@ -174,11 +174,16 @@ standard input.  Some of these commands ignore the tag names.
 *   Added tab completion for bash.
 *   Made `shelf_push` and `shelf_fanout` fetch the branch first, so new branches
     can be pushed to repositories that don't have them yet.
+*   `shelf_fanout` is able to process multiple project directories.
 
 #### 0.2
 
-(to be written based on reading the repo history)
+*   Added `shelf_test`, `shelf_dockgh`, `shelf_push`, `shelf_fanout`,
+    `shelf_populate_from_distfiles`, `shelf_populate_from_git`, `shelf_cast`,
+    `shelf_pin`, and `shelf_unpin`.
+*   `shelf_build` is able to process multiple sources.
+*   Fixed bug where `shelf_build` exited immediately on the first error.
 
 #### 0.1
 
-(to be written based on reading the repo history)
+*   Initial version.
