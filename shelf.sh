@@ -59,7 +59,7 @@ _shelf_link_stuff() {
     for source in `find "$dir" $find_opts`; do
         base=`basename "$source"`
         case "$base" in
-            *.jpg|*.png)
+            *.jpg|*.png|.git)
                 _shelf_verbose Skipping $base
             ;;
             ${skip_pat})
