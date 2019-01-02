@@ -1,7 +1,7 @@
 shelf
 =====
 
-*Version 0.3.  Subject to change in backwards-incompatible ways.*
+*Version 0.4.  Subject to change in backwards-incompatible ways.*
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
@@ -168,6 +168,10 @@ standard input.  Some of these commands ignore the tag names.
 *   Would a `shelf_pwd_all` be helpful?  It's in my notes, but I don't know why.
 
 ### History
+
+#### 0.4
+
+*   Fixed a bug where it was trying to link `.git` directories.
 
 #### 0.3
 
