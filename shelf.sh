@@ -50,47 +50,60 @@ _shelf_link_stuff() {
     dir="$1"
     subdir="$2"
     find_opts="-name .git -prune -o -path Funicular/eg -prune -o -path Chrysoberyl/modules -prune -o -path Chrysoberyl/checkout -prune -o $3"
-    skip_pat="$4"
     if [ "X$dir" = X ]; then
-        echo "Usage: shelf_link_stuff <dir> <subdir> <find-opts> <skip-pat>"
+        echo "Usage: _shelf_link_stuff <dir> <subdir> <find-opts>"
         return 1
     fi
     _shelf_verbose "find $dir $find_opts"
     for source in `find "$dir" $find_opts`; do
         base=`basename "$source"`
-        case "$base" in
-            *.jpg|*.png|.git)
-                _shelf_verbose Skipping $base
-            ;;
-            ${skip_pat})
-                _shelf_verbose Skipping $base
-            ;;
-            *)
-                _shelf_ln "$source" "$SHELF_FARMBASE/$subdir/$base"
-            ;;
-        esac
+        if [ "X$subdir" = "Xbin" ]; then
+            case "$base" in
+                *.jpg|*.png|.git|.hg|depcomp|configure|config.guess|*.h|*.so|*.so.*)
+                    _shelf_verbose Skipping $base
+                ;;
+                *)
+                    _shelf_ln "$source" "$SHELF_FARMBASE/$subdir/$base"
+                ;;
+            esac
+        elif [ "X$subdir" = "Xinclude" ]; then
+            case "$base" in
+                *.jpg|*.png|.git|.hg)
+                    _shelf_verbose Skipping $base
+                ;;
+                *)
+                    _shelf_ln "$source" "$SHELF_FARMBASE/$subdir/$base"
+                ;;
+            esac
+        elif [ "X$subdir" = "Xlib" ]; then
+            case "$base" in
+                *.jpg|*.png|.git|.hg)
+                    _shelf_verbose Skipping $base
+                ;;
+                *)
+                    _shelf_ln "$source" "$SHELF_FARMBASE/$subdir/$base"
+                ;;
+            esac
+        fi
     done
 }
 
 _shelf_link_bin() {
     subdir="bin"
     find_opts="-perm -111 -type f"
-    skip_pat=".git|depcomp|configure|config.guess|*.h|*.so|*.so.*"
-    _shelf_link_stuff "$1" "$subdir" "$find_opts" "$skip_pat"
+    _shelf_link_stuff "$1" "$subdir" "$find_opts"
 }
 
 _shelf_link_include() {
     subdir="include"
     find_opts="-name '*.h'"
-    skip_pat=".git"
-    _shelf_link_stuff "$1" "$subdir" "$find_opts" "$skip_pat"
+    _shelf_link_stuff "$1" "$subdir" "$find_opts"
 }
 
 _shelf_link_lib() {
     subdir="lib"
     find_opts="-name '*.so' -o -name '*.so.*'"
-    skip_pat=".git"
-    _shelf_link_stuff "$1" "$subdir" "$find_opts" "$skip_pat"
+    _shelf_link_stuff "$1" "$subdir" "$find_opts"
 }
 
 
