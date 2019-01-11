@@ -49,7 +49,19 @@ _shelf_ln() {
 _shelf_link_stuff() {
     dir="$1"
     subdir="$2"
-    find_opts="-name .git -prune -o -path Funicular/eg -prune -o -path Chrysoberyl/modules -prune -o -path Chrysoberyl/checkout -prune -o $3"
+
+    exclude_dirs=".git .hg venv"
+    exclude_paths="Funicular/eg Chrysoberyl/modules Chrysoberyl/checkout"
+    find_opts=""
+    for ed in $exclude_dirs; do
+        find_opts="$find_opts -name $ed -prune -o "
+    done
+    for ep in $exclude_paths; do
+        find_opts="$find_opts -path $ep -prune -o "
+    done
+    find_opts="$find_opts $3"
+    _shelf_verbose "Find-opts: <<$find_opts>>"
+
     if [ "X$dir" = X ]; then
         echo "Usage: _shelf_link_stuff <dir> <subdir> <find-opts>"
         return 1
@@ -59,7 +71,7 @@ _shelf_link_stuff() {
         base=`basename "$source"`
         if [ "X$subdir" = "Xbin" ]; then
             case "$base" in
-                *.jpg|*.png|.git|.hg|depcomp|configure|config.guess|*.h|*.so|*.so.*)
+                *.jpg|*.png|.git|.hg|venv|depcomp|configure|config.guess|*.h|*.so|*.so.*)
                     _shelf_verbose Skipping $base
                 ;;
                 *)
@@ -68,7 +80,7 @@ _shelf_link_stuff() {
             esac
         elif [ "X$subdir" = "Xinclude" ]; then
             case "$base" in
-                *.jpg|*.png|.git|.hg)
+                *.jpg|*.png|.git|.hg|venv)
                     _shelf_verbose Skipping $base
                 ;;
                 *)
@@ -77,7 +89,7 @@ _shelf_link_stuff() {
             esac
         elif [ "X$subdir" = "Xlib" ]; then
             case "$base" in
-                *.jpg|*.png|.git|.hg)
+                *.jpg|*.png|.git|.hg|venv)
                     _shelf_verbose Skipping $base
                 ;;
                 *)
