@@ -1,7 +1,7 @@
 shelf
 =====
 
-*Version 0.3.  Subject to change in backwards-incompatible ways.*
+*Version 0.4.  Subject to change in backwards-incompatible ways.*
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
@@ -166,8 +166,16 @@ standard input.  Some of these commands ignore the tag names.
 *   Make a `shelf_fanin` to complement `shelf_fanout`.
 *   Make a `shelf_populate_from_shelf` (`shelf_replicate`?)
 *   Would a `shelf_pwd_all` be helpful?  It's in my notes, but I don't know why.
+*   Configure list of dirs to skip when linking, in an env var
 
 ### History
+
+#### 0.4
+
+*   Fixed a bug where it was trying to link `.git` directories and other
+    inappropriate files because a pattern wasn't being correctly applied.
+*   `venv` (Python virtualenv directory) and `.hg` (Mercurial directory)
+    are now skipped when finding files to link.
 
 #### 0.3
 
