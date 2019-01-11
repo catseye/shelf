@@ -50,6 +50,11 @@ _shelf_link_stuff() {
     dir="$1"
     subdir="$2"
 
+    if [ "X$dir" = X ]; then
+        echo "Usage: _shelf_link_stuff <dir> <subdir> <find-opts>"
+        return 1
+    fi
+
     exclude_dirs=".git .hg venv"
     exclude_paths="Funicular/eg Chrysoberyl/modules Chrysoberyl/checkout"
     find_opts=""
@@ -60,12 +65,7 @@ _shelf_link_stuff() {
         find_opts="$find_opts -path $ep -prune -o "
     done
     find_opts="$find_opts $3"
-    _shelf_verbose "Find-opts: <<$find_opts>>"
 
-    if [ "X$dir" = X ]; then
-        echo "Usage: _shelf_link_stuff <dir> <subdir> <find-opts>"
-        return 1
-    fi
     _shelf_verbose "find $dir $find_opts"
     for source in `find "$dir" $find_opts`; do
         base=`basename "$source"`
