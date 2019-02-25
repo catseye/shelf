@@ -1,11 +1,11 @@
 shelf
 =====
 
-*Version 0.4.  Subject to change in backwards-incompatible ways.*
+*Version 0.5.  Subject to change in backwards-incompatible ways.*
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
-[toolshelf](https://github.com/catseye/toolshelf), implemented as a
+[toolshelf](https://catseye.tc/node/toolshelf), implemented as a
 set of Bourne shell functions.
 
 Quick Start
@@ -82,8 +82,10 @@ The following shell functions are defined by `shelf.sh` and available for use:
 
 *   `shelf_which` *NAME*
     
-    Essentially the same as `which` but, if the found file is a symbolic link,
-    display the filename that the link points to as well.
+    Essentially the same as `command -v` but, if the found file is a symbolic
+    link, the link destination is output instead.  Thus, if *NAME* is
+    an executable in your link farm, the file in the originating project
+    will be shown.
 
 *   `shelf_dockgh` *USER/PROJECT*
     
@@ -170,6 +172,11 @@ standard input.  Some of these commands ignore the tag names.
 
 ### History
 
+#### 0.5
+
+*   Changed `shelf_which` to [not use the which command][] and to produce
+    cleaner output (only show the target executable file).
+
 #### 0.4
 
 *   Fixed a bug where it was trying to link `.git` directories and other
@@ -195,3 +202,5 @@ standard input.  Some of these commands ignore the tag names.
 #### 0.1
 
 *   Initial version.
+
+[not use the which command]: https://unix.stackexchange.com/questions/85249/why-not-use-which-what-to-use-then

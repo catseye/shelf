@@ -387,13 +387,13 @@ shelf_cd() {
 }
 
 shelf_which() {
-    w=`which $1`
+    w=`command -v $1`
     if [ "x$w" = "x" ]; then
         return 1
     fi
     if [ -L "$w" ]; then
         r=`readlink $w`
-        echo "$w -> $r"
+        echo "$r"
     else
         echo "$w"
     fi
