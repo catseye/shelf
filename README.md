@@ -121,13 +121,24 @@ standard input.  Some of these commands ignore the tag names.
     
     Given a directory *DIR* containing tarballs of the project listed in
     *CATALOG*, extract each of those tarballs to a directory of the same
-    name in the current directory (assumed to be on `SHELF_PATH`.)
+    name in the current directory.
+    
+    The current directory is assumed to be on `SHELF_PATH`.
 
 *   `shelf_populate_from_git` *PREFIX* < *CATALOG*
     
     For each of the projects listed in *CATALOG*, prefix *PREFIX* to its
-    name and attempt to clone that named object with `git` to a repository
-    directory in the current directory (assumed to be on `SHELF_PATH`.)
+    name and, if a corresponding directory exists in the current directory,
+    update the repository in that corresponding directory using `git pull`,
+    otherwise attempt to `git clone` the repository to that corresponding
+    directory in the current directory.
+    
+    The current directory is assumed to be on `SHELF_PATH`.
+
+*    `shelf_mirror_from_git` *PREFIX* < *CATALOG*
+    
+    The same as `shelf_populate_from_git`, but uses `git clone --mirror` to
+    clone each new repo directory, and `git remote update` to update it.
 
 *   `shelf_cast` *DIR* < *CATALOG*
     
@@ -176,6 +187,7 @@ standard input.  Some of these commands ignore the tag names.
 
 *   Changed `shelf_which` to [not use the which command][] and to produce
     cleaner output (only show the target executable file).
+*   Introduced `shelf_mirror_from_git`.
 
 #### 0.4
 

@@ -411,8 +411,6 @@ shelf_populate_from_distfiles() {
         elif [ -e "$src_dir/$project.tgz" ]; then
             tar zxvf $src_dir/$project.tgz
         fi
-        #shelf_build $project
-        #shelf_link $project
     done
 }
 
@@ -439,9 +437,22 @@ shelf_populate_from_git() {
         if [ "X$tag" != X ]; then
             (cd $dest && git checkout $tag)
         fi
+    done
+}
 
-        #shelf_build $project
-        #shelf_link $project
+shelf_mirror_from_git() {
+    git_prefix="$1"
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+
+        url="$git_prefix$project"
+        dest=`basename $url`
+
+        if [ ! -d $dest ]; then
+            git clone --mirror $url $dest
+        fi
+        (cd $dest && git remote update)
     done
 }
 
