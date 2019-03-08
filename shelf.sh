@@ -469,7 +469,7 @@ shelf_cast() {
         fi
 
         rm -rf "$projection_dir/$dest_project"
-        (echo -n "$project: " && cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
+        (echo "$projection_dir/$dest_project" && cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
     done
 }
 
