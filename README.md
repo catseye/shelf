@@ -188,6 +188,8 @@ standard input.  Some of these commands ignore the tag names.
 *   Changed `shelf_which` to [not use the which command][] and to produce
     cleaner output (only show the target executable file).
 *   Introduced `shelf_mirror_from_git`.
+*   Commands which work on catalog files output the name of each directory
+    just before they process it, making the output more sensible to read.
 
 #### 0.4
 

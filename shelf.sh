@@ -426,16 +426,16 @@ shelf_populate_from_git() {
         dest=`basename $url`
 
         if [ ! -d $dest ]; then
-            git clone $url $dest
+            echo -n "$dest: " && git clone $url $dest
         fi
 
         branch=`cd $dest && git rev-parse --abbrev-ref HEAD`
         if [ "X$branch" != "XHEAD" ]; then
-            (cd $dest && git pull)
+            (echo -n "$dest: " && cd $dest && git pull)
         fi
 
         if [ "X$tag" != X ]; then
-            (cd $dest && git checkout $tag)
+            (echo -n "$dest: " && cd $dest && git checkout $tag)
         fi
     done
 }
@@ -452,7 +452,7 @@ shelf_mirror_from_git() {
         if [ ! -d $dest ]; then
             git clone --mirror $url $dest
         fi
-        (cd $dest && git remote update)
+        (echo -n "$dest: " && cd $dest && git remote update)
     done
 }
 
@@ -469,7 +469,7 @@ shelf_cast() {
         fi
 
         rm -rf "$projection_dir/$dest_project"
-        (cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
+        (echo -n "$project: " && cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
     done
 }
 
@@ -481,7 +481,7 @@ shelf_pin() {
         dest="$project"
         if [ -d $dest ]; then
             if [ "X$tag" != X ]; then
-                (cd $dest && git checkout $tag)
+                (echo -n "$dest: " && cd $dest && git checkout $tag)
             fi
         fi
     done
@@ -494,7 +494,7 @@ shelf_unpin() {
 
         dest="$project"
         if [ -d $dest ]; then
-            (cd $dest && git checkout master)
+            (echo -n "$dest: " && cd $dest && git checkout master)
         fi
     done
 }
