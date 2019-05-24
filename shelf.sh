@@ -387,13 +387,13 @@ shelf_cd() {
 }
 
 shelf_which() {
-    w=`which $1`
+    w=`command -v $1`
     if [ "x$w" = "x" ]; then
         return 1
     fi
     if [ -L "$w" ]; then
         r=`readlink $w`
-        echo "$w -> $r"
+        echo "$r"
     else
         echo "$w"
     fi
@@ -411,8 +411,6 @@ shelf_populate_from_distfiles() {
         elif [ -e "$src_dir/$project.tgz" ]; then
             tar zxvf $src_dir/$project.tgz
         fi
-        #shelf_build $project
-        #shelf_link $project
     done
 }
 
@@ -428,20 +426,33 @@ shelf_populate_from_git() {
         dest=`basename $url`
 
         if [ ! -d $dest ]; then
-            git clone $url $dest
+            echo -n "$dest: " && git clone $url $dest
         fi
 
         branch=`cd $dest && git rev-parse --abbrev-ref HEAD`
         if [ "X$branch" != "XHEAD" ]; then
-            (cd $dest && git pull)
+            (echo -n "$dest: " && cd $dest && git pull)
         fi
 
         if [ "X$tag" != X ]; then
-            (cd $dest && git checkout $tag)
+            (echo -n "$dest: " && cd $dest && git checkout $tag)
         fi
+    done
+}
 
-        #shelf_build $project
-        #shelf_link $project
+shelf_mirror_from_git() {
+    git_prefix="$1"
+    while read -r line; do
+        project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
+        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+
+        url="$git_prefix$project"
+        dest=`basename $url`
+
+        if [ ! -d $dest ]; then
+            git clone --mirror $url $dest
+        fi
+        (echo -n "$dest: " && cd $dest && git remote update)
     done
 }
 
@@ -458,7 +469,7 @@ shelf_cast() {
         fi
 
         rm -rf "$projection_dir/$dest_project"
-        (cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
+        (echo "$projection_dir/$dest_project" && cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
     done
 }
 
@@ -470,7 +481,7 @@ shelf_pin() {
         dest="$project"
         if [ -d $dest ]; then
             if [ "X$tag" != X ]; then
-                (cd $dest && git checkout $tag)
+                (echo -n "$dest: " && cd $dest && git checkout $tag)
             fi
         fi
     done
@@ -483,7 +494,7 @@ shelf_unpin() {
 
         dest="$project"
         if [ -d $dest ]; then
-            (cd $dest && git checkout master)
+            (echo -n "$dest: " && cd $dest && git checkout master)
         fi
     done
 }

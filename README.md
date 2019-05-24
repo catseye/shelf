@@ -1,11 +1,11 @@
 shelf
 =====
 
-*Version 0.4.  Subject to change in backwards-incompatible ways.*
+*Version 0.5.  Subject to change in backwards-incompatible ways.*
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
-[toolshelf](https://github.com/catseye/toolshelf), implemented as a
+[toolshelf](https://catseye.tc/node/toolshelf), implemented as a
 set of Bourne shell functions.
 
 Quick Start
@@ -82,8 +82,10 @@ The following shell functions are defined by `shelf.sh` and available for use:
 
 *   `shelf_which` *NAME*
     
-    Essentially the same as `which` but, if the found file is a symbolic link,
-    display the filename that the link points to as well.
+    Essentially the same as `command -v` but, if the found file is a symbolic
+    link, the link destination is output instead.  Thus, if *NAME* is
+    an executable in your link farm, the file in the originating project
+    will be shown.
 
 *   `shelf_dockgh` *USER/PROJECT*
     
@@ -119,13 +121,24 @@ standard input.  Some of these commands ignore the tag names.
     
     Given a directory *DIR* containing tarballs of the project listed in
     *CATALOG*, extract each of those tarballs to a directory of the same
-    name in the current directory (assumed to be on `SHELF_PATH`.)
+    name in the current directory.
+    
+    The current directory is assumed to be on `SHELF_PATH`.
 
 *   `shelf_populate_from_git` *PREFIX* < *CATALOG*
     
     For each of the projects listed in *CATALOG*, prefix *PREFIX* to its
-    name and attempt to clone that named object with `git` to a repository
-    directory in the current directory (assumed to be on `SHELF_PATH`.)
+    name and, if a corresponding directory exists in the current directory,
+    update the repository in that corresponding directory using `git pull`,
+    otherwise attempt to `git clone` the repository to that corresponding
+    directory in the current directory.
+    
+    The current directory is assumed to be on `SHELF_PATH`.
+
+*    `shelf_mirror_from_git` *PREFIX* < *CATALOG*
+    
+    The same as `shelf_populate_from_git`, but uses `git clone --mirror` to
+    clone each new repo directory, and `git remote update` to update it.
 
 *   `shelf_cast` *DIR* < *CATALOG*
     
@@ -170,6 +183,14 @@ standard input.  Some of these commands ignore the tag names.
 
 ### History
 
+#### 0.5
+
+*   Changed `shelf_which` to [not use the which command][] and to produce
+    cleaner output (only show the target executable file).
+*   Introduced `shelf_mirror_from_git`.
+*   Commands which work on catalog files output the name of each directory
+    just before they process it, making the output more sensible to read.
+
 #### 0.4
 
 *   Fixed a bug where it was trying to link `.git` directories and other
@@ -195,3 +216,5 @@ standard input.  Some of these commands ignore the tag names.
 #### 0.1
 
 *   Initial version.
+
+[not use the which command]: https://unix.stackexchange.com/questions/85249/why-not-use-which-what-to-use-then
