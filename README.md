@@ -1,7 +1,13 @@
-shelf
-=====
+`shelf`
+=======
 
-*Version 0.5.  Subject to change in backwards-incompatible ways.*
+_Version 0.5_
+| _Entry_ [@ catseye.tc](https://catseye.tc/node/shelf)
+| _See also:_ [ellsync](https://github.com/catseye/ellsync#readme)
+∘ [tagfarm](https://github.com/catseye/tagfarm#readme)
+∘ [yastasoti](https://github.com/catseye/yastasoti#readme)
+
+- - - -
 
 Cat's Eye Technologies' **shelf** is "a package installer which
 neither packages nor installs".  It aims to be a replacement for
