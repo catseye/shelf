@@ -429,7 +429,7 @@ shelf_populate_from_git() {
         if [ ! -d $dest ]; then
             (echo -n "$dest: " && git clone $url $dest)
             if [ $? -ne 0 ]; then
-                failures="$failures $base"
+                failures="$failures $dest"
             fi
         fi
 
@@ -437,14 +437,14 @@ shelf_populate_from_git() {
         if [ "X$branch" != "XHEAD" ]; then
             (echo -n "$dest: " && cd $dest && git pull)
             if [ $? -ne 0 ]; then
-                failures="$failures $base"
+                failures="$failures $dest"
             fi
         fi
 
         if [ "X$tag" != X ]; then
             (echo -n "$dest: " && cd $dest && git checkout $tag)
             if [ $? -ne 0 ]; then
-                failures="$failures $base"
+                failures="$failures $dest"
             fi
         fi
     done
@@ -452,7 +452,7 @@ shelf_populate_from_git() {
     if [ "X$failures" = X ]; then
         return 0
     else
-        echo "Failures: $failures"
+        echo "shelf_populate_from_git failed! Failures: ($failures)"
         return 1
     fi
 }
@@ -501,7 +501,7 @@ shelf_pin() {
             if [ "X$tag" != X ]; then
                 (echo -n "$dest: " && cd $dest && git checkout $tag)
                 if [ $? -ne 0 ]; then
-                    failures="$failures $base"
+                    failures="$failures $dest"
                 fi
             fi
         fi
@@ -509,7 +509,7 @@ shelf_pin() {
     if [ "X$failures" = X ]; then
         return 0
     else
-        echo "Failures: $failures"
+        echo "shelf_pin failed! Failures: ($failures)"
         return 1
     fi
 }
