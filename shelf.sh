@@ -416,6 +416,7 @@ shelf_populate_from_distfiles() {
 
 shelf_populate_from_git() {
     git_prefix="$1"
+    failures=""
     while read -r line; do
         project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
         tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
@@ -426,18 +427,34 @@ shelf_populate_from_git() {
         dest=`basename $url`
 
         if [ ! -d $dest ]; then
-            echo -n "$dest: " && git clone $url $dest
+            (echo -n "$dest: " && git clone $url $dest)
+            if [ $? -ne 0 ]; then
+                failures="$failures $base"
+            fi
         fi
 
         branch=`cd $dest && git rev-parse --abbrev-ref HEAD`
         if [ "X$branch" != "XHEAD" ]; then
             (echo -n "$dest: " && cd $dest && git pull)
+            if [ $? -ne 0 ]; then
+                failures="$failures $base"
+            fi
         fi
 
         if [ "X$tag" != X ]; then
             (echo -n "$dest: " && cd $dest && git checkout $tag)
+            if [ $? -ne 0 ]; then
+                failures="$failures $base"
+            fi
         fi
     done
+
+    if [ "X$failures" = X ]; then
+        return 0
+    else
+        echo "Failures: $failures"
+        return 1
+    fi
 }
 
 shelf_mirror_from_git() {
@@ -474,6 +491,7 @@ shelf_cast() {
 }
 
 shelf_pin() {
+    failures=""
     while read -r line; do
         project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
         tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
@@ -482,9 +500,18 @@ shelf_pin() {
         if [ -d $dest ]; then
             if [ "X$tag" != X ]; then
                 (echo -n "$dest: " && cd $dest && git checkout $tag)
+                if [ $? -ne 0 ]; then
+                    failures="$failures $base"
+                fi
             fi
         fi
     done
+    if [ "X$failures" = X ]; then
+        return 0
+    else
+        echo "Failures: $failures"
+        return 1
+    fi
 }
 
 shelf_unpin() {
