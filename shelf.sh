@@ -478,7 +478,11 @@ shelf_cast() {
 
     while read -r line; do
         project=`echo $line | awk '{split($0,a,"@"); print a[1]}'`
-        tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+        if [ "X$SHELF_CAST_REF" != X ]; then
+            tag="$SHELF_CAST_REF"
+        else
+            tag=`echo $line | awk '{split($0,a,"@"); print a[2]}'`
+        fi
 
         dest_project=$project
         if [ "X$SHELF_LOWERCASE" != X ]; then
@@ -486,7 +490,7 @@ shelf_cast() {
         fi
 
         rm -rf "$projection_dir/$dest_project"
-        (echo "$projection_dir/$dest_project" && cd $project && git archive --format=tar --prefix=$dest_project/ HEAD | (cd $projection_dir && tar xf -) )
+        (echo "$projection_dir/$dest_project" && cd $project && git archive --format=tar --prefix=$dest_project/ $tag | (cd $projection_dir && tar xf -) )
     done
 }
 

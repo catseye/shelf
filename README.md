@@ -150,7 +150,14 @@ standard input.  Some of these commands ignore the tag names.
     
     When executed from a directory containing repositories listed in *CATALOG*,
     create a non-version-controlled directory in *DIR* from each of the listed
-    repositories.
+    repositories, at the tag or branch given by its tag name.
+
+    Two environment variables affect the operation of `shelf_cast`:
+
+    `SHELF_LOWERCASE`, if set, causes the casted directory to be created as
+    the lower-cased version of the catalog entry name.
+
+    `SHELF_CAST_REF`, if set, overrides the tag given in the catalog entry.
 
 *   `shelf_pin` < *CATALOG*
     
@@ -191,6 +198,10 @@ standard input.  Some of these commands ignore the tag names.
 
 #### 0.6
 
+*   `shelf_cast`, by default, now casts the version of the source
+    repository at the tag given in each catalog entry, instead of
+    always casting `HEAD`.  Setting the environment variable
+    `SHELF_CAST_REF` to `HEAD` can override this new behaviour.
 *   Made `shelf_populate_from_git` and `shelf_pin` record a list of
     directories which they failed to process, and fail themselves at the
     end of procssing if that list is not empty.
