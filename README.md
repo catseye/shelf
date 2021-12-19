@@ -1,7 +1,7 @@
 `shelf`
 =======
 
-_Version 0.5_
+_Version 0.6_
 | _Entry_ [@ catseye.tc](https://catseye.tc/node/shelf)
 | _See also:_ [ellsync](https://github.com/catseye/ellsync#readme)
 ∘ [tagfarm](https://github.com/catseye/tagfarm#readme)
@@ -141,7 +141,7 @@ standard input.  Some of these commands ignore the tag names.
     
     The current directory is assumed to be on `SHELF_PATH`.
 
-*    `shelf_mirror_from_git` *PREFIX* < *CATALOG*
+*   `shelf_mirror_from_git` *PREFIX* < *CATALOG*
     
     The same as `shelf_populate_from_git`, but uses `git clone --mirror` to
     clone each new repo directory, and `git remote update` to update it.
@@ -150,7 +150,14 @@ standard input.  Some of these commands ignore the tag names.
     
     When executed from a directory containing repositories listed in *CATALOG*,
     create a non-version-controlled directory in *DIR* from each of the listed
-    repositories.
+    repositories, at the tag or branch given by its tag name.
+
+    Two environment variables affect the operation of `shelf_cast`:
+
+    `SHELF_LOWERCASE`, if set, causes the casted directory to be created as
+    the lower-cased version of the catalog entry name.
+
+    `SHELF_CAST_REF`, if set, overrides the tag given in the catalog entry.
 
 *   `shelf_pin` < *CATALOG*
     
@@ -188,6 +195,16 @@ standard input.  Some of these commands ignore the tag names.
 *   Configure list of dirs to skip when linking, in an env var
 
 ### History
+
+#### 0.6
+
+*   `shelf_cast`, by default, now casts the version of the source
+    repository at the tag given in each catalog entry, instead of
+    always casting `HEAD`.  Setting the environment variable
+    `SHELF_CAST_REF` to `HEAD` can override this new behaviour.
+*   Made `shelf_populate_from_git` and `shelf_pin` record a list of
+    directories which they failed to process, and fail themselves at the
+    end of procssing if that list is not empty.
 
 #### 0.5
 
