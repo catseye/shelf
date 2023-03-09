@@ -1,7 +1,7 @@
 `shelf`
 =======
 
-_Version 0.6_
+_Version 0.7_
 | _Entry_ [@ catseye.tc](https://catseye.tc/node/shelf)
 | _See also:_ [ellsync](https://github.com/catseye/ellsync#readme)
 ∘ [tagfarm](https://github.com/catseye/tagfarm#readme)
@@ -195,6 +195,11 @@ standard input.  Some of these commands ignore the tag names.
 *   Configure list of dirs to skip when linking, in an env var
 
 ### History
+
+#### 0.7
+
+*   Fixed a bug in `shelf_link` where links were not being correctly
+    made to files with spaces in their pathnames.
 
 #### 0.6
 

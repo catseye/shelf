@@ -29,9 +29,9 @@ _shelf_abspath_dir() {
 }
 
 _shelf_abspath_file() {
-    dir=`dirname $1`
+    dir=`dirname "$1"`
     dir=`_shelf_abspath_dir "$dir"`
-    base=`basename $1`
+    base=`basename "$1"`
     echo "$dir/$base"
 }
 
@@ -42,7 +42,12 @@ _shelf_ln() {
     if [ -e "$dest" ]; then
         _shelf_verbose $dest already exists
     else
-        _shelf_show_run ln -s "$source" "$dest"
+        if [ "X$SHELF_DRYRUN" != X ]; then
+            echo "$* (DRY RUN)"
+        else
+            echo $*
+        fi
+        ln -s "$source" "$dest"
     fi
 }
 
@@ -67,7 +72,7 @@ _shelf_link_stuff() {
     find_opts="$find_opts $3"
 
     _shelf_verbose "find $dir $find_opts"
-    for source in `find "$dir" $find_opts`; do
+    find "$dir" $find_opts | while read source; do
         base=`basename "$source"`
         if [ "X$subdir" = "Xbin" ]; then
             case "$base" in
