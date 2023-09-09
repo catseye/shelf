@@ -1,11 +1,11 @@
 `shelf`
 =======
 
-_Version 0.7_
+_Version 0.8_
 | _Entry_ [@ catseye.tc](https://catseye.tc/node/shelf)
-| _See also:_ [ellsync](https://github.com/catseye/ellsync#readme)
-∘ [tagfarm](https://github.com/catseye/tagfarm#readme)
-∘ [yastasoti](https://github.com/catseye/yastasoti#readme)
+| _See also:_ [ellsync](https://catseye.tc/node/ellsync)
+∘ [tagfarm](https://catseye.tc/node/tagfarm)
+∘ [yastasoti](https://catseye.tc/node/yastasoti)
 
 - - - -
 
@@ -137,7 +137,8 @@ standard input.  Some of these commands ignore the tag names.
     name and, if a corresponding directory exists in the current directory,
     update the repository in that corresponding directory using `git pull`,
     otherwise attempt to `git clone` the repository to that corresponding
-    directory in the current directory.
+    directory in the current directory.  In both cases a `git fetch` will
+    be executed as well.
     
     The current directory is assumed to be on `SHELF_PATH`.
 
@@ -195,6 +196,12 @@ standard input.  Some of these commands ignore the tag names.
 *   Configure list of dirs to skip when linking, in an env var
 
 ### History
+
+#### 0.8
+
+*   `shelf_populate_from_git` now pulls using the specified origin
+    (rather than the one set in the repository), and executes a
+    `git fetch` after cloning (and/or before pulling.)
 
 #### 0.7
 

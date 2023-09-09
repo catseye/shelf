@@ -320,7 +320,7 @@ shelf_push() {
         echo "Usage: shelf_push dest_shelf {dir}"
         return 1
     fi
-    
+
     dest_shelf=$1
     shift
 
@@ -432,7 +432,14 @@ shelf_populate_from_git() {
         dest=`basename $url`
 
         if [ ! -d $dest ]; then
-            (echo -n "$dest: " && git clone $url $dest)
+            (echo -n "[CLONE $url]: " && git clone $url $dest)
+            if [ $? -ne 0 ]; then
+                failures="$failures $dest"
+            fi
+        fi
+
+        if [ -d $dest ]; then
+            (echo -n "[FETCH $url]: " && cd $dest && git fetch $url)
             if [ $? -ne 0 ]; then
                 failures="$failures $dest"
             fi
@@ -440,14 +447,14 @@ shelf_populate_from_git() {
 
         branch=`cd $dest && git rev-parse --abbrev-ref HEAD`
         if [ "X$branch" != "XHEAD" ]; then
-            (echo -n "$dest: " && cd $dest && git pull)
+            (echo -n "[PULL $url]: " && cd $dest && git pull $url)
             if [ $? -ne 0 ]; then
                 failures="$failures $dest"
             fi
         fi
 
         if [ "X$tag" != X ]; then
-            (echo -n "$dest: " && cd $dest && git checkout $tag)
+            (echo -n "[CHECKOUT $dest $tag]: " && cd $dest && git checkout $tag)
             if [ $? -ne 0 ]; then
                 failures="$failures $dest"
             fi
