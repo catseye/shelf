@@ -187,13 +187,18 @@ standard input.  Some of these commands ignore the tag names.
     filesystem (for example, running commands like `ln` and `rm`) and instead
     will only report that such changes would be made.
 
-### TODO
+### TODO / NOTES
 
 *   Make a `shelf_pull` to complement `shelf_push`.
 *   Make a `shelf_fanin` to complement `shelf_fanout`.
 *   Make a `shelf_populate_from_shelf` (`shelf_replicate`?)
 *   Would a `shelf_pwd_all` be helpful?  It's in my notes, but I don't know why.
 *   Configure list of dirs to skip when linking, in an env var
+*   Check if farm dir (`.local/bin`) exists before trying to make link there
+*   Don't link files called `test.sh`
+*   `shelf_clone`, same as `git clone 'shelf_pwd $x' && git pull origin --tags`,
+    but should abort if ambiguous
+*   Some kind of test harness would be way nice
 
 ### History
 
